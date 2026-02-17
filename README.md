@@ -2,7 +2,7 @@
 
 Este repositorio contiene la implementación de un **Analizador Léxico** (Lexer) desarrollado en C++. El proyecto es parte de la asignatura de Software de Sistemas de la carrera de Ingeniería de Software en la Universidad Autónoma de Sinaloa.
 
-## 📋 Información del Proyecto
+##  Información del Proyecto
 
 * **Universidad:** Universidad Autónoma de Sinaloa (UAS)
 * **Facultad:** Ingeniería de Software
@@ -11,20 +11,20 @@ Este repositorio contiene la implementación de un **Analizador Léxico** (Lexer
 * **Grupo:** 3-02
 * **Actividad:** Especificación y Diseño Léxico
 
-### 👥 Autores
+### Autores
 * **Laurean Acosta Luis Donaldo**
 * **Liera Payan Diego**
 * **Rosas Castro Manuel Ernesto**
 
 ---
 
-## 🚀 Descripción General
+## Descripción General
 
 El objetivo de este analizador es leer un archivo de texto fuente y convertir la secuencia de caracteres en una secuencia de **Tokens**. El lexer valida las reglas léxicas definidas para el lenguaje, ignorando espacios en blanco y tabuladores (excepto en cadenas), y contando saltos de línea para el reporte de errores.
 
 El analizador está basado en **Autómatas Finitos Deterministas (AFD)** para el reconocimiento de patrones complejos como identificadores, números y cadenas.
 
-## 🛠 Especificación del Lenguaje
+## Especificación del Lenguaje
 
 El analizador reconoce los siguientes componentes léxicos:
 
@@ -57,7 +57,7 @@ El analizador ignora el texto contenido en:
 
 ---
 
-## 💻 Estructura del Código
+## Estructura del Código
 
 El proyecto está estructurado en C++ utilizando las siguientes definiciones clave:
 
@@ -72,7 +72,7 @@ Se implementa una máquina de estados para transitar carácter por carácter, id
 
 ---
 
-## ⚙️ Compilación y Ejecución
+## Compilación y Ejecución
 
 Para compilar el proyecto, asegúrate de tener un compilador de C++ (como `g++`) instalado.
 
