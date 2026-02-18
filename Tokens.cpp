@@ -4,7 +4,7 @@
 
 // Definición de todos los posibles tokens según la especificación
 enum class TokenType {
-    // Palabras reservadas
+    // Palabras reservadas (KW = KeyWord)
     KW_INICIO,          // "Inicio"
     KW_FIN,             // "Fin"
     KW_SI,              // "si"
@@ -24,7 +24,7 @@ enum class TokenType {
     KW_LEER,            // "Leer"
     KW_LIMPIAR_PANTALLA,// "LimpiarPantalla"
 
-    //  Operadores y simbolos
+    //  Operadores y simbolos (OP = OPerator)
     OP_SUMA,            // "+"
     OP_RESTA,           // "-" (También usado para números negativos)
     OP_MULT,            // "*"
@@ -37,7 +37,7 @@ enum class TokenType {
     OP_MAYOR,           // ">"
     OP_MAYOR_IGUAL,     // ">="
     
-    // Separadores
+    // Separadores (SEP =  SEParator)
     SEP_PARENTESIS_A,   // "("
     SEP_PARENTESIS_C,   // ")"
     SEP_LLAVE_A,        // "{"
@@ -47,7 +47,7 @@ enum class TokenType {
     SEP_PUNTO_COMA,     // ";"
     SEP_COMA,           // "," (Mencionado como separador de argumentos)
     
-    // Valores totales
+    // Valores totales (LIT = LITeral)
     ID,                 // Identificadores (Variables, nombres de funciones) [cite: 32]
     LIT_ENTERO,         // Números enteros (ej. 123, -5) [cite: 66]
     LIT_DECIMAL,        // Números decimales (ej. 12.34, 1.2E+5) [cite: 77]
