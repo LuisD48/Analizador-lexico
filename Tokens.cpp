@@ -59,11 +59,12 @@ enum class TokenType {
     ERROR               // Token no reconocido
 };
 
+// Estructura para representar un token con su tipo, lexema y posición en el código
 struct Token {
-    TokenType tipo;      // El tipo de token (del enum de arriba)
-    std::string lexema;  // El texto original (ej. "contador", "15.5", "Inicio")
-    int linea;           // Número de línea para reportar errores
-    int columna;         // Opcional: útil para mensajes de error precisos
+    TokenType tipo;      
+    std::string lexema;  
+    int linea;           
+    int columna;         
 
     // Constructor para facilitar la creación de tokens
     Token(TokenType t, std::string l, int lin, int col = 0) 
