@@ -9,7 +9,7 @@ using namespace std;
 
 enum class TokenType {
     PALABRA_RESERVADA, IDENTIFICADOR, ENTERO,
-    DECIMAL, CADENA, OPERADOR, SIMBOLO, ERROR
+    DECIMAL, CADENA, OPERADOR, SIMBOLO, COMENTARIO, ERROR
 };
 
 struct Token {
@@ -24,6 +24,7 @@ Token* cabeza = nullptr;
 Token* cola = nullptr;
 int contadorTokens = 0;
 
+// Función para insertar un nuevo token en la lista enlazada
 void insertarToken(const string& lex, TokenType tipo, const string& val, int lin, int col) {
     Token* nuevo = new Token{++contadorTokens, lex, val, tipo, lin, col, nullptr};
     if (!cabeza) cabeza = cola = nuevo;
@@ -33,18 +34,23 @@ void insertarToken(const string& lex, TokenType tipo, const string& val, int lin
     }
 }
 
+// Función para validar si una cadena es un número decimal válido
 bool esDecimal(const string& s) {
     bool punto = false;
+    // Un número decimal debe tener al menos un dígito y exactamente un punto
     if (s.empty()) return false;
+    // Si ya habíamos visto un punto (punto==true) y encontramos otro, regresa false (porque serían dos puntos).
     for (char c : s) {
         if (c == '.') {
             if (punto) return false;
             punto = true;
+            // Si no es dígito, entonces no es decimal válido.
         } else if (!isdigit(static_cast<unsigned char>(c))) return false;
     }
-    return punto; // true si tiene un punto
+    return punto;
 }
 
+// Función para obtener el nombre del tipo de token como string
 string nombreTipo(TokenType t) {
     switch (t) {
         case TokenType::PALABRA_RESERVADA: return "RESERVADA";
@@ -54,10 +60,12 @@ string nombreTipo(TokenType t) {
         case TokenType::CADENA:            return "CADENA";
         case TokenType::OPERADOR:          return "OPERADOR";
         case TokenType::SIMBOLO:           return "SIMBOLO";
+        case TokenType::COMENTARIO:        return "COMENTARIO";
         case TokenType::ERROR:             return "ERROR";
         default:                           return "??";
     }
 }
+
 
 bool esSimboloPermitido(char c) {
     switch (c) {
@@ -85,11 +93,11 @@ int main() {
     }
 
     unordered_map<string,string> reservadas = {
-    {"Inicio","Inicio"}, {"Fin","Fin"}, {"si","Condicional"},
-    {"sino","Alternativa"}, {"mientras","Bucle"},
-    {"Para","Bucle"}, {"Funcion","Función"},
-    {"Dec","Tipo"}, {"Imprimir","Salida"}
-};
+        {"Inicio","Inicio"}, {"Fin","Fin"}, {"si","Condicional"},
+        {"sino","Alternativa"}, {"mientras","Bucle"},
+        {"Para","Bucle"}, {"Funcion","Función"},
+        {"Dec","Tipo"}, {"Imprimir","Salida"}
+    };
 
     char c;
     string buffer;
@@ -105,6 +113,26 @@ int main() {
         buffer.clear();
         int colInicio = columna;
 
+        // ==========================
+        // NUEVO: COMENTARIOS //...
+        // ==========================
+        if (c == '/' && archivo.peek() == '/') {
+            archivo.get(c);              // consume el segundo '/'
+            columna++;
+
+            string textoComentario;
+            while (archivo.peek() != EOF && archivo.peek() != '\n') {
+                archivo.get(c);
+                textoComentario += c;
+                columna++;
+            }
+
+            // Lexema: //   Valor: texto del comentario
+            insertarToken("//", TokenType::COMENTARIO, textoComentario, linea, colInicio);
+            continue;
+        }
+
+        // Identificadores / Reservadas
         if (isalpha(static_cast<unsigned char>(c)) || c == '_') {
             buffer += c;
             while (archivo.peek() != EOF &&
@@ -119,6 +147,7 @@ int main() {
             else
                 insertarToken(buffer, TokenType::IDENTIFICADOR, "-", linea, colInicio);
         }
+        // Números
         else if (isdigit(static_cast<unsigned char>(c))) {
             buffer += c;
             bool vioPunto = false;
@@ -147,6 +176,7 @@ int main() {
                 insertarToken(buffer, TokenType::ENTERO, buffer, linea, colInicio);
             }
         }
+        // Cadenas
         else if (c == '"') {
             buffer += c;
             bool cerrada = false;
@@ -155,9 +185,7 @@ int main() {
                 columna++;
                 buffer += c;
                 if (c == '"') { cerrada = true; break; }
-                if (c == '\n') {
-                    linea++; columna = 0;
-                }
+                if (c == '\n') { linea++; columna = 0; }
             }
 
             if (cerrada) {
@@ -167,14 +195,17 @@ int main() {
                 hayErrores = true;
             }
         }
+        // Operadores
         else if (esOperadorPermitido(c)) {
             string s(1, c);
             insertarToken(s, TokenType::OPERADOR, "-", linea, colInicio);
         }
+        // Símbolos permitidos
         else if (esSimboloPermitido(c)) {
             string s(1, c);
             insertarToken(s, TokenType::SIMBOLO, "-", linea, colInicio);
         }
+        // Error
         else {
             string s(1, c);
             insertarToken(s, TokenType::ERROR, "Símbolo no válido", linea, colInicio);
@@ -182,10 +213,7 @@ int main() {
         }
     }
 
-    // ======= AQUÍ ESTÁ LA ÚNICA CORRECCIÓN (IMPRESIÓN) =======
-
     if (hayErrores) {
-        // Solo mostrar errores (sin tabla)
         cout << "\n===== ERRORES LÉXICOS DETECTADOS =====\n";
         Token* aux = cabeza;
         while (aux) {
@@ -198,7 +226,6 @@ int main() {
             aux = aux->siguiente;
         }
     } else {
-        // Mostrar tabla completa solo si no hay errores
         cout << left
              << setw(8)  << "Token#"
              << setw(15) << "Lexico"
