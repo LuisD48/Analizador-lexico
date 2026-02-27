@@ -1,9 +1,4 @@
-Inicio
+"Hola"
+"hola2
 
-Dec x //Este es un comentario
-x = 10
-si x > 5
-Imprimir "Hola mundo" /* Este es un bloque 
-de comentario */
-
-Fin
+hola3

@@ -13,7 +13,7 @@ enum class TokenType {
 };
 
 struct Token {
-    int numero;                 // <-- Token #
+    int numero;               
     string lexema, valor;
     TokenType tipo;
     int linea, columna;
@@ -24,7 +24,7 @@ Token* cabeza = nullptr;
 Token* cola = nullptr;
 int contadorTokens = 0;
 
-// Función para insertar un nuevo token en la lista enlazada
+//función para insertar un nuevo token en la lista enlazada
 void insertarToken(const string& lex, TokenType tipo, const string& val, int lin, int col) {
     Token* nuevo = new Token{++contadorTokens, lex, val, tipo, lin, col, nullptr};
     if (!cabeza) cabeza = cola = nuevo;
@@ -34,23 +34,25 @@ void insertarToken(const string& lex, TokenType tipo, const string& val, int lin
     }
 }
 
-// Función para validar si una cadena es un número decimal válido
+//función para validar si una cadena es un número decimal válido
 bool esDecimal(const string& s) {
     bool punto = false;
-    // Un número decimal debe tener al menos un dígito y exactamente un punto
+    bool digitoDespues = false;
     if (s.empty()) return false;
-    // Si ya habíamos visto un punto (punto==true) y encontramos otro, regresa false (porque serían dos puntos).
     for (char c : s) {
         if (c == '.') {
             if (punto) return false;
             punto = true;
-            // Si no es dígito, entonces no es decimal válido.
-        } else if (!isdigit(static_cast<unsigned char>(c))) return false;
+        } else if (!isdigit(static_cast<unsigned char>(c))) {
+            return false;
+        } else {
+            if (punto) digitoDespues = true;
+        }
     }
-    return punto;
+    return punto && digitoDespues;
 }
 
-// Función para obtener el nombre del tipo de token como string
+//función para obtener el nombre del tipo de token como string
 string nombreTipo(TokenType t) {
     switch (t) {
         case TokenType::PALABRA_RESERVADA: return "RESERVADA";
@@ -113,9 +115,7 @@ int main() {
         buffer.clear();
         int colInicio = columna;
 
-        // ==========================
-        // NUEVO: COMENTARIOS //...
-        // ==========================
+        //comentarios de una línea (//)
         if (c == '/' && archivo.peek() == '/') {
             archivo.get(c);              // consume el segundo '/'
             columna++;
@@ -127,7 +127,7 @@ int main() {
                 columna++;
             }
 
-            // Lexema: //   Valor: texto del comentario
+            // Lexema: //  texto del comentario
             insertarToken("//", TokenType::COMENTARIO, textoComentario, linea, colInicio);
             continue;
         }
