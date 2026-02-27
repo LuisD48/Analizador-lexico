@@ -53,7 +53,6 @@ Estas palabras definen la estructura y control del programa:
 ### 5. Comentarios
 El analizador ignora el texto contenido en:
 * Comentarios de línea: `// ...`
-* Comentarios de bloque: `/* ... */`
 
 ---
 
